@@ -1,5 +1,6 @@
 "use client"
 
+import Header from "@/components/header"
 import { useState } from "react"
 
 
@@ -67,6 +68,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-background to-background/80">
+      <Header />
       <main className="flex-1 py-8 px-4">
         <div className="container mx-auto">
           <h1 className="text-3xl md:text-4xl font-bold text-center mb-2 bg-orange-200 bg-clip-text text-transparent">
