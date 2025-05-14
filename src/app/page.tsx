@@ -1,5 +1,6 @@
 "use client"
 
+import Footer from "@/components/footer"
 import Header from "@/components/header"
 import { useState } from "react"
 
@@ -99,6 +100,7 @@ export default function Home() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   )
 }
