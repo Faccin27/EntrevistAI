@@ -2,7 +2,10 @@
 
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import InterviewerSelector, { Interviewer } from "@/components/interviewer-selector";
+import InterviewChat from "@/components/interview-chat";
+import InterviewerSelector, {
+  Interviewer,
+} from "@/components/interviewer-selector";
 import JobSelector from "@/components/job-selector";
 import { useState } from "react";
 
@@ -19,8 +22,8 @@ export default function Home() {
     InterviewStage.JOB_SELECTION
   );
   const [selectedJob, setSelectedJob] = useState<string>("");
-  const [selectedInterviewer, setSelectedInterviewer] = useState<Interviewer | null>(null)
-
+  const [selectedInterviewer, setSelectedInterviewer] =
+    useState<Interviewer | null>(null);
 
   const handleInterviewerSelect = (interviewer: Interviewer) => {
     setSelectedInterviewer(interviewer);
@@ -44,6 +47,14 @@ export default function Home() {
         return (
           <InterviewerSelector onInterviewerSelect={handleInterviewerSelect} />
         );
+      case InterviewStage.INTERVIEW:
+        return selectedInterviewer ? (
+          <InterviewChat
+            job={selectedJob}
+            interviewer={selectedInterviewer}
+            onFinishInterview={handleFinishInterview}
+          />
+        ) : null;
       default:
         return null;
     }
