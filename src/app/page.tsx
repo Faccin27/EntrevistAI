@@ -3,6 +3,7 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import InterviewChat from "@/components/interview-chat";
+import InterviewSummary from "@/components/interview-summary";
 import InterviewerSelector, {
   Interviewer,
 } from "@/components/interviewer-selector";
@@ -39,6 +40,12 @@ export default function Home() {
     setStage(InterviewStage.SUMMARY);
   };
 
+  const handleRestart = () => {
+    setStage(InterviewStage.JOB_SELECTION);
+    setSelectedJob("");
+    setSelectedInterviewer(null);
+  };
+
   const renderStageContent = () => {
     switch (stage) {
       case InterviewStage.JOB_SELECTION:
@@ -53,6 +60,14 @@ export default function Home() {
             job={selectedJob}
             interviewer={selectedInterviewer}
             onFinishInterview={handleFinishInterview}
+          />
+        ) : null;
+      case InterviewStage.SUMMARY:
+        return selectedInterviewer ? (
+          <InterviewSummary
+            job={selectedJob}
+            interviewer={selectedInterviewer}
+            onRestart={handleRestart}
           />
         ) : null;
       default:
