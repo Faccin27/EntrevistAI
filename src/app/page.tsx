@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import Footer from "@/components/footer"
-import Header from "@/components/header"
-import { useState } from "react"
-
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+import JobSelector from "@/components/job-selector";
+import { useState } from "react";
 
 // Estágios do processo de entrevista
 enum InterviewStage {
@@ -14,27 +14,39 @@ enum InterviewStage {
 }
 
 export default function Home() {
-  const [stage, setStage] = useState<InterviewStage>(InterviewStage.JOB_SELECTION)
-  const [selectedJob, setSelectedJob] = useState<string>("")
+  const [stage, setStage] = useState<InterviewStage>(
+    InterviewStage.JOB_SELECTION
+  );
+  const [selectedJob, setSelectedJob] = useState<string>("");
 
   const handleJobSelect = (job: string) => {
-    setSelectedJob(job)
-    setStage(InterviewStage.INTERVIEWER_SELECTION)
-  }
-
+    setSelectedJob(job);
+    setStage(InterviewStage.INTERVIEWER_SELECTION);
+  };
 
   const handleFinishInterview = () => {
-    setStage(InterviewStage.SUMMARY)
-  }
+    setStage(InterviewStage.SUMMARY);
+  };
 
+  const renderStageContent = () => {
+    switch (stage) {
+      case InterviewStage.JOB_SELECTION:
+        return <JobSelector onJobSelect={handleJobSelect} />;
+      default:
+        return null;
+    }
+  };
 
   const renderProgressBar = () => {
     const stages = [
       { name: "Selecionar Vaga", stage: InterviewStage.JOB_SELECTION },
-      { name: "Escolher Entrevistador", stage: InterviewStage.INTERVIEWER_SELECTION },
+      {
+        name: "Escolher Entrevistador",
+        stage: InterviewStage.INTERVIEWER_SELECTION,
+      },
       { name: "Entrevista", stage: InterviewStage.INTERVIEW },
       { name: "Resumo", stage: InterviewStage.SUMMARY },
-    ]
+    ];
 
     return (
       <div className="w-full max-w-4xl mx-auto mb-8 px-4">
@@ -44,18 +56,26 @@ export default function Home() {
               <div className="relative flex items-center justify-center">
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    stage >= s.stage ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    stage >= s.stage
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {index + 1}
                 </div>
                 {index < stages.length - 1 && (
-                  <div className={`progress-connector ${stage > s.stage ? "bg-primary" : "bg-muted"}`}></div>
+                  <div
+                    className={`progress-connector ${
+                      stage > s.stage ? "bg-primary" : "bg-muted"
+                    }`}
+                  ></div>
                 )}
               </div>
               <span
                 className={`text-xs mt-2 text-center ${
-                  stage >= s.stage ? "text-primary font-medium" : "text-muted-foreground"
+                  stage >= s.stage
+                    ? "text-primary font-medium"
+                    : "text-muted-foreground"
                 }`}
               >
                 {s.name}
@@ -64,8 +84,8 @@ export default function Home() {
           ))}
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-background to-background/80">
@@ -76,25 +96,35 @@ export default function Home() {
             Entrevist<span className="text-orange-600">AI</span>
           </h1>
           <p className="text-muted-foreground text-center mb-8">
-            Treine para entrevistas de emprego com diferentes perfis de entrevistadores
+            Treine para entrevistas de emprego com diferentes perfis de
+            entrevistadores
           </p>
 
           {renderProgressBar()}
 
+          <div className="my-8">{renderStageContent()}</div>
 
           {stage === InterviewStage.JOB_SELECTION && (
-            <section id="about" className="max-w-3xl mx-auto mt-16 p-6 glass-card rounded-lg">
-              <h2 className="text-2xl font-bold mb-4">Sobre o Entrevist<span className="text-orange-600">AI</span></h2>
+            <section
+              id="about"
+              className="max-w-3xl mx-auto mt-16 p-6 glass-card rounded-lg"
+            >
+              <h2 className="text-2xl font-bold mb-4">
+                Sobre o Entrevist<span className="text-orange-600">AI</span>
+              </h2>
               <p className="mb-4">
-                O Entrevist<span className="text-orange-600">AI</span> é uma plataforma que utiliza inteligência artificial para simular entrevistas de
-                emprego com diferentes tipos de entrevistadores.
+                O Entrevist<span className="text-orange-600">AI</span> é uma
+                plataforma que utiliza inteligência artificial para simular
+                entrevistas de emprego com diferentes tipos de entrevistadores.
               </p>
               <p className="mb-4">
-                Nosso objetivo é ajudar você a se preparar para entrevistas reais, praticando com diversos perfis de
-                entrevistadores - desde os amigáveis até os mais críticos.
+                Nosso objetivo é ajudar você a se preparar para entrevistas
+                reais, praticando com diversos perfis de entrevistadores - desde
+                os amigáveis até os mais críticos.
               </p>
               <p>
-                Selecione o cargo desejado, escolha o tipo de entrevistador que deseja praticar e comece sua simulação!
+                Selecione o cargo desejado, escolha o tipo de entrevistador que
+                deseja praticar e comece sua simulação!
               </p>
             </section>
           )}
@@ -102,5 +132,5 @@ export default function Home() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
