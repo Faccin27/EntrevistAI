@@ -1,8 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #f97316;
+  --primary-foreground: #ffffff;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #3f3f46;
+  --muted-foreground: #a1a1aa;
+  --accent: #18181b;
+  --accent-foreground: #fafafa;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #f97316;
+  --radius: 0.5rem;
+
+  --interviewer-friendly: #22c55e;
+  --interviewer-moderate: #3b82f6;
+  --interviewer-technical: #a855f7;
+  --interviewer-critical: #ef4444;
+  --interviewer-bitter: #71717a;
 }
 
 @theme inline {
@@ -12,16 +32,109 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
 }
 
+.glass-card {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.progress-connector {
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: -1;
+}
+
+/* Estilos para as bordas coloridas dos cards de entrevistadores */
+.border-interviewer-friendly {
+  border-color: var(--interviewer-friendly);
+}
+
+.border-interviewer-moderate {
+  border-color: var(--interviewer-moderate);
+}
+
+.border-interviewer-technical {
+  border-color: var(--interviewer-technical);
+}
+
+.border-interviewer-critical {
+  border-color: var(--interviewer-critical);
+}
+
+.border-interviewer-bitter {
+  border-color: var(--interviewer-bitter);
+}
+
+/* Estilos para os backgrounds dos botões de entrevistadores */
+.bg-interviewer-friendly {
+  background-color: var(--interviewer-friendly);
+}
+
+.bg-interviewer-moderate {
+  background-color: var(--interviewer-moderate);
+}
+
+.bg-interviewer-technical {
+  background-color: var(--interviewer-technical);
+}
+
+.bg-interviewer-critical {
+  background-color: var(--interviewer-critical);
+}
+
+.bg-interviewer-bitter {
+  background-color: var(--interviewer-bitter);
+}
+
+/* Estilos para os textos coloridos */
+.text-interviewer-friendly {
+  color: var(--interviewer-friendly);
+}
+
+.text-interviewer-moderate {
+  color: var(--interviewer-moderate);
+}
+
+.text-interviewer-technical {
+  color: var(--interviewer-technical);
+}
+
+.text-interviewer-critical {
+  color: var(--interviewer-critical);
+}
+
+.text-interviewer-bitter {
+  color: var(--interviewer-bitter);
+}
+
+/* Hover states para botões */
+.hover\:bg-interviewer-friendly\/80:hover {
+  background-color: color-mix(in srgb, var(--interviewer-friendly) 80%, transparent);
+}
+
+.hover\:bg-interviewer-moderate\/80:hover {
+  background-color: color-mix(in srgb, var(--interviewer-moderate) 80%, transparent);
+}
+
+.hover\:bg-interviewer-technical\/80:hover {
+  background-color: color-mix(in srgb, var(--interviewer-technical) 80%, transparent);
+}
+
+.hover\:bg-interviewer-critical\/80:hover {
+  background-color: color-mix(in srgb, var(--interviewer-critical) 80%, transparent);
+}
+
+.hover\:bg-interviewer-bitter\/80:hover {
+  background-color: color-mix(in srgb, var(--interviewer-bitter) 80%, transparent);
+}
