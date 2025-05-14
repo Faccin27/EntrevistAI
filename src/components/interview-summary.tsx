@@ -104,11 +104,11 @@ export default function InterviewSummary({ job, interviewer, onRestart }: Interv
   const feedback = getFeedback()
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6 text-center">Entrevista Finalizada</h2>
+    <div className="w-full max-w-2xl mx-auto overflow-auto">
+      <h2 className="text-2xl font-bold mb-4 text-center">Entrevista Finalizada</h2>
 
-      <Card className="glass-card p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
+      <Card className="glass-card p-5 mb-4">
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-xl font-semibold">Resultado da Entrevista</h3>
           <div className={`flex items-center gap-2 ${wasHired ? "text-green-400" : "text-red-400"} font-bold`}>
             {wasHired ? (
@@ -125,7 +125,7 @@ export default function InterviewSummary({ job, interviewer, onRestart }: Interv
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div>
             <p className="font-medium text-primary">Cargo:</p>
             <p>{job}</p>
@@ -140,17 +140,17 @@ export default function InterviewSummary({ job, interviewer, onRestart }: Interv
           <Button
             variant="outline"
             onClick={() => setShowDetails(!showDetails)}
-            className="w-full flex items-center justify-center gap-2"
+            className="w-full flex items-center justify-center gap-2 bg-orange-600/50 hover:bg-orange-700 cursor-pointer border border-white/10"
           >
             {showDetails ? "Ocultar Detalhes" : "Ver Feedback Detalhado"}
-            <ArrowDown className={`h-4 w-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
+            <ArrowDown className={`h-4 w-4  transition-transform ${showDetails ? "rotate-180" : ""}`} />
           </Button>
 
           {showDetails && (
-            <div className="mt-4 space-y-4 animate-accordion-down">
+            <div className="mt-3 space-y-3 animate-accordion-down">
               <div>
-                <p className="font-medium text-green-400 mb-2">Pontos Fortes:</p>
-                <ul className="list-disc ml-5 space-y-1">
+                <p className="font-medium text-green-400 mb-1">Pontos Fortes:</p>
+                <ul className="list-disc ml-5 space-y-1 text-sm">
                   {feedback.strengths.map((strength, idx) => (
                     <li key={idx}>{strength}</li>
                   ))}
@@ -158,8 +158,8 @@ export default function InterviewSummary({ job, interviewer, onRestart }: Interv
               </div>
 
               <div>
-                <p className="font-medium text-red-400 mb-2">Pontos a Melhorar:</p>
-                <ul className="list-disc ml-5 space-y-1">
+                <p className="font-medium text-red-400 mb-1">Pontos a Melhorar:</p>
+                <ul className="list-disc ml-5 space-y-1 text-sm">
                   {feedback.improvements.map((improvement, idx) => (
                     <li key={idx}>{improvement}</li>
                   ))}
@@ -167,17 +167,17 @@ export default function InterviewSummary({ job, interviewer, onRestart }: Interv
               </div>
 
               <div>
-                <p className="font-medium text-primary mb-2">Dica Profissional:</p>
-                <p className="italic">{feedback.tips}</p>
+                <p className="font-medium text-primary mb-1">Dica Profissional:</p>
+                <p className="italic text-sm">{feedback.tips}</p>
               </div>
             </div>
           )}
         </div>
       </Card>
 
-      <Card className="glass-card p-6 mb-6">
-        <h3 className="text-xl font-semibold mb-4">Recomendações Gerais</h3>
-        <ul className="list-disc ml-5 space-y-2">
+      <Card className="glass-card p-5 mb-4">
+        <h3 className="text-xl font-semibold mb-3">Recomendações Gerais</h3>
+        <ul className="list-disc ml-5 space-y-1 text-sm">
           <li>Pesquise profundamente sobre a empresa e o cargo antes da entrevista</li>
           <li>Prepare exemplos concretos usando o método STAR (Situação, Tarefa, Ação, Resultado)</li>
           <li>Considere suas fraquezas e prepare-se para discuti-las de forma construtiva</li>
@@ -186,11 +186,11 @@ export default function InterviewSummary({ job, interviewer, onRestart }: Interv
         </ul>
       </Card>
 
-      <div className="text-center space-y-4">
-        <p className="text-muted-foreground">
+      <div className="text-center space-y-3">
+        <p className="text-muted-foreground text-sm">
           Continue praticando com diferentes tipos de entrevistadores para melhorar suas habilidades!
         </p>
-        <Button onClick={onRestart} size="lg" className="px-8">
+        <Button onClick={onRestart} size="lg" className="px-8 bg-orange-600/50 hover:bg-orange-700 cursor-pointer border border-white/10">
           Iniciar Nova Entrevista
         </Button>
       </div>

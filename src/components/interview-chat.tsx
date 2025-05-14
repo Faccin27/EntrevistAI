@@ -102,12 +102,12 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
       `
 
       // Chamar a API do Gemini
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-      const result = await model.generateContent(context);
+      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "")
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
+      const result = await model.generateContent(context)
       const response = {
-        text: result.response.text()
-      };
+        text: result.response.text(),
+      }
 
       const botResponse = {
         id: generateId(),
@@ -217,24 +217,24 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
   const getAvatarColor = () => {
     switch (interviewer.id) {
       case "friendly":
-        return "bg-green-300"
+        return "bg-interviewer-friendly"
       case "moderate":
-        return "bg-blue-400"
+        return "bg-interviewer-moderate"
       case "technical":
-        return "bg-purple-400"
+        return "bg-interviewer-technical"
       case "critical":
-        return "bg-red-500"
+        return "bg-interviewer-critical"
       case "bitter":
-        return "bg-gray-500"
+        return "bg-interviewer-bitter"
       default:
         return "bg-primary"
     }
   }
 
   return (
-    <div className="flex flex-col h-[80vh] max-w-4xl mx-auto">
+    <div className="flex flex-col h-full w-full max-w-4xl mx-auto">
       {/* Cabeçalho do chat */}
-      <div className={`p-4 flex items-center border-b bg-${interviewer.color}/10`}>
+      <div className={`p-3 flex items-center border-b bg-${interviewer.color}/10 rounded-t-lg`}>
         <Avatar className={`${getAvatarColor()} text-white w-10 h-10 mr-3`}>
           <span className="font-semibold">{interviewer.name.charAt(0)}</span>
         </Avatar>
@@ -243,7 +243,7 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
           <p className="text-sm text-muted-foreground">{interviewer.type}</p>
         </div>
         <div className="ml-auto">
-          <Button variant="outline" onClick={onFinishInterview}>
+          <Button variant="outline" onClick={onFinishInterview} size="sm" className="bg-orange-600/50 hover:bg-orange-700 cursor-pointer border border-white/10">
             Finalizar Entrevista
           </Button>
         </div>
@@ -252,7 +252,7 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
       {/* Área de mensagens */}
       <div className="flex-1 p-4 overflow-y-auto bg-secondary/30">
         {messages.map((message) => (
-          <div key={message.id} className={`mb-4 flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
+          <div key={message.id} className={`mb-3 flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
             <Card
               className={`max-w-[80%] p-3 ${
                 message.sender === "user"
@@ -267,7 +267,7 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
                   </Avatar>
                 )}
                 <div>
-                  <p className="whitespace-pre-wrap">{message.text}</p>
+                  <p className="whitespace-pre-wrap text-sm">{message.text}</p>
                   <p className="text-xs opacity-70 mt-1">
                     {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </p>
@@ -282,7 +282,7 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
           </div>
         ))}
         {isLoading && (
-          <div className="flex justify-start mb-4">
+          <div className="flex justify-start mb-3">
             <Card className={`max-w-[80%] p-3 bg-card border-l-4 border-${interviewer.color}`}>
               <div className="flex items-center">
                 <Avatar className={`${getAvatarColor()} mr-2 text-white w-8 h-8`}>
@@ -301,13 +301,13 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
       </div>
 
       {/* Área de input */}
-      <form onSubmit={handleSendMessage} className="p-4 border-t bg-card">
+      <form onSubmit={handleSendMessage} className="p-3 border-t bg-card rounded-b-lg">
         <div className="flex space-x-2">
           <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Digite sua mensagem..."
-            className="flex-1 resize-none"
+            className="flex-1 resize-none bg-secondary/30 border-white/10"
             rows={2}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {

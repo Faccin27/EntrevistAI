@@ -48,12 +48,12 @@ export default function JobSelector({ onJobSelect }: JobSelectorProps) {
             placeholder="Ex: Desenvolvedor Front-end"
             className="w-full bg-secondary/30 border-white/10"
           />
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-orange-600/70 hover:bg-orange-700 cursor-pointer border border-white/10">
             Continuar
           </Button>
         </form>
 
-        <div className="mt-8">
+        <div className="mt-6">
           <h3 className="text-lg font-medium mb-3">Vagas populares:</h3>
           <div className="flex flex-wrap gap-2">
             {popularJobs.map((job) => (
@@ -61,7 +61,7 @@ export default function JobSelector({ onJobSelect }: JobSelectorProps) {
                 key={job}
                 variant="outline"
                 onClick={() => handleQuickSelect(job)}
-                className="text-sm border-white/10 hover:bg-white/5"
+                className="text-sm border-white/10 hover:bg-white/5 cursor-pointer"
               >
                 {job}
               </Button>

@@ -2,6 +2,8 @@
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Avatar } from "@/components/ui/avatar"
+import { MessageCircle } from "lucide-react"
 
 export interface Interviewer {
   id: string
@@ -66,22 +68,27 @@ const interviewers: Interviewer[] = [
 
 export default function InterviewerSelector({ onInterviewerSelect }: InterviewerSelectorProps) {
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center">Escolha seu entrevistador</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="w-full max-w-4xl mx-auto overflow-auto py-2">
+      <h2 className="text-2xl font-bold mb-4 text-center">Escolha seu entrevistador</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {interviewers.map((interviewer) => (
           <Card
             key={interviewer.id}
-            className={`p-6 glass-card border-l-4 border-${interviewer.color} hover:shadow-lg transition-shadow`}
+            className={`p-4 glass-card border-l-4 border-${interviewer.color} hover:shadow-lg transition-shadow`}
           >
             <div className="flex flex-col h-full">
-              <div className="mb-4">
-                <h3 className="text-xl font-bold">{interviewer.name}</h3>
-                <p className={`text-${interviewer.color} font-medium`}>{interviewer.type}</p>
-                <p className="mt-2 text-gray-400">{interviewer.description}</p>
+              <div className="flex items-center gap-3 mb-3">
+                <Avatar className={`bg-${interviewer.color} text-white w-10 h-10`}>
+                  <MessageCircle className="h-5 w-5" />
+                </Avatar>
+                <div>
+                  <h3 className="text-lg font-bold">{interviewer.name}</h3>
+                  <p className={`text-${interviewer.color} text-sm font-medium`}>{interviewer.type}</p>
+                </div>
               </div>
+              <p className="text-sm text-gray-400 mb-4 flex-grow">{interviewer.description}</p>
               <Button
-                className={`mt-auto bg-${interviewer.color} hover:bg-${interviewer.color}/80`}
+                className={`mt-auto cursor-pointer bg-${interviewer.color} hover:bg-${interviewer.color}/80 w-full`}
                 onClick={() => onInterviewerSelect(interviewer)}
               >
                 Selecionar
