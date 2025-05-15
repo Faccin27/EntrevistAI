@@ -29,12 +29,41 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
+  const genAI = new GoogleGenerativeAI("api key")
+  const chatModel = genAI.getGenerativeModel({ 
+    model: "gemini-1.5-flash", 
+    generationConfig: {
+      temperature: 0.7,
+      maxOutputTokens: 300, 
+    }
+  })
+  
+  const [chatSession, setChatSession] = useState<any>(null)
 
-  // Função para gerar um ID único para as mensagens
   const generateId = () => Date.now().toString()
 
   useEffect(() => {
-    // Iniciar a entrevista com uma mensagem do entrevistador
+    try {
+      const chatHistory = [
+        { 
+          role: "user", 
+          parts: [{ text: "Olá, podemos começar a entrevista?" }] 
+        },
+        { 
+          role: "model", 
+          parts: [{ text: `Olá, eu sou ${interviewer.name}. Vamos começar nossa entrevista para a vaga de ${job}.` }] 
+        }
+      ]
+      
+      const session = chatModel.startChat({
+        history: chatHistory,
+      })
+      
+      setChatSession(session)
+    } catch (error) {
+      console.error("Erro ao inicializar a sessão de chat:", error)
+    }
+    
     const initialMessage = {
       id: generateId(),
       sender: "interviewer" as const,
@@ -69,6 +98,17 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
     }
   }
 
+  const buildPrompt = (userInput: string) => {
+    return `
+    Você é um simulador de entrevistas de emprego chamado EntrevistaGênio. 
+    Você está atuando como ${interviewer.name}, um entrevistador com a seguinte personalidade: "${interviewer.personality}".
+    
+    A pessoa está se candidatando para a vaga de: ${job}.
+    
+    Responda como ${interviewer.name}, mantendo a personalidade descrita e fazendo perguntas relevantes para a vaga de ${job}. Mantenha suas respostas entre 2-4 frases, no máximo.
+    `
+  }
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -84,45 +124,37 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
     setMessages((prev) => [...prev, userMessage])
     setInput("")
     setIsLoading(true)
+    
+    const userInput = input.trim()
 
     try {
-      // Construir o contexto para o Gemini
-      const context = `
-      Você é um simulador de entrevistas de emprego chamado EntrevistaGênio. 
-      Você está atuando como ${interviewer.name}, um entrevistador com a seguinte personalidade: "${interviewer.personality}".
-      
-      A pessoa está se candidatando para a vaga de: ${job}.
-      
-      Histórico da conversa:
-      ${messages.map((m) => `${m.sender === "interviewer" ? interviewer.name : "Candidato"}: ${m.text}`).join("\n")}
-      
-      Candidato: ${input}
-      
-      Responda como ${interviewer.name}, mantendo a personalidade descrita e fazendo perguntas relevantes para a vaga de ${job}. Mantenha suas respostas entre 2-4 frases, no máximo.
-      `
+      if (!chatSession) {
+        throw new Error("Sessão de chat não inicializada")
+      }
 
-      // Chamar a API do Gemini
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "")
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
-      const result = await model.generateContent(context)
-      const response = {
-        text: result.response.text(),
+      // Preparar o prompt do sistema
+      const systemPrompt = buildPrompt(userInput)
+      
+      // Enviar a mensagem para o Gemini usando a sessão de chat
+      const result = await chatSession.sendMessage(`${systemPrompt}\n\nCandidato: ${userInput}`)
+      const responseText = await result.response.text()
+      
+      if (!responseText) {
+        throw new Error("Resposta vazia recebida da API")
       }
 
       const botResponse = {
         id: generateId(),
         sender: "interviewer" as const,
-        text: response.text,
+        text: responseText,
         timestamp: new Date(),
       }
 
       setMessages((prev) => [...prev, botResponse])
-      setIsLoading(false)
     } catch (error) {
-      console.error("Erro ao obter resposta:", error)
+      console.error("Erro ao obter resposta do Gemini:", error)
 
-      // Fallback para resposta simulada em caso de erro
-      const fallbackResponse = await simulateGeminiResponse(input, messages, interviewer, job)
+      const fallbackResponse = await simulateGeminiResponse(userInput, messages, interviewer, job)
 
       const botResponse = {
         id: generateId(),
@@ -132,23 +164,21 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
       }
 
       setMessages((prev) => [...prev, botResponse])
+    } finally {
       setIsLoading(false)
     }
   }
 
-  // Função que simula a resposta da API do Gemini (fallback)
   const simulateGeminiResponse = async (
     userMessage: string,
     previousMessages: Message[],
     interviewer: Interviewer,
     job: string,
   ): Promise<string> => {
-    // Simplificação da lógica de resposta pra cada entrevistador
-    const lastMessages = previousMessages.slice(-3) // Pegar as últimas 3 mensagens para contexto
+    const lastMessages = previousMessages.slice(-3) 
 
     let response = ""
 
-    // Personalidades
     switch (interviewer.id) {
       case "friendly":
         if (userMessage.toLowerCase().includes("nervoso") || userMessage.toLowerCase().includes("ansioso")) {
@@ -213,7 +243,6 @@ export default function InterviewChat({ job, interviewer, onFinishInterview }: I
     return response
   }
 
-  // Determina a cor do avatar baseado no tipo de entrevistador
   const getAvatarColor = () => {
     switch (interviewer.id) {
       case "friendly":
